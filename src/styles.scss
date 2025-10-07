@@ -1,1 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
+@use './tailwind.css';
+@use 'assets/layout/layout.scss';
+@use 'primeicons/primeicons.css';
+@use 'assets/demo/demo.scss';
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  margin-right: 0.2rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.No_msg_block {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  p {
+    margin-bottom: 0 !important;
+  }
+}
+
+.custom-table .p-datatable-thead > tr > th {
+  background: none;
+}
+
+.listSearchBar .p-inputtext{
+  width: 300px;
+}
+
+.listName .p-tag{
+  padding: 0 10px;
+}
+.itemSearchBar .p-inputtext{
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2rem !important;
+  background-color: transparent;
+}
+.p-autocomplete{
+  display: flex !important;
+}

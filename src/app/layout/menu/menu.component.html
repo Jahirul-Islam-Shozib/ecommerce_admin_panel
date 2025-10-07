@@ -1,0 +1,43 @@
+<div class="layout-menu-header">
+  <a class="layout-menu-header-logo pr-4">
+    <img alt="logo image" src="assets/image/logo.png">
+  </a>
+</div>
+
+<div class="layout-menu-container">
+
+  <ul (keydown)="onKeydown($event)" class="layout-menu" role="menu">
+    <li *ngFor="let item of model; let i = index;" [class.visible-category]="item.visible" app-menu
+        class="layout-menuitem-category" role="none">
+      <div (click)="item.items && item.items.length > 1 ? toggleItem(i) : null"
+           *ngIf="item.label" class="layout-menuitem">
+        <div class="flex align-items-center">
+          <div [attr.aria-label]="item.label" class="layout-menuitem-root-text mb-0">
+            {{ item.label }}
+          </div>
+        </div>
+        <div *ngIf="item.items && item.items.length > 1 && item.label" class="layout-menuitem-root-icon">
+          <i [ngClass]="item.visible ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
+        </div>
+      </div>
+      <ul *ngIf="item.items as subItems" [@openClose]="item.visible? 'show' : 'hide'"
+          [ngClass]="{'has-multiple-subitems': item.items && subItems.length > 1}"
+          role="menu">
+        <li *ngFor="let child of item.items" [index]="i" [item]="child" app-menuitem role="none">
+          <a [routerLink]="child.routerLink" routerLinkActive="active-menuitem-routerlink">{{ child.label }}</a>
+        </li>
+      </ul>
+      @if (item.items?.length == 1) {
+        <ul
+          [ngClass]="{'has-multiple-subitems': item.items && item.items.length>1}"
+          role="menu">
+          @for (child of item.items; track child) {
+            <li [index]="i" [item]="child" app-menuitem role="none">
+              <a [routerLink]="child.routerLink" routerLinkActive="active-menuitem-routerlink">{{ child.label }}</a>
+            </li>
+          }
+        </ul>
+      }
+    </li>
+  </ul>
+</div>
