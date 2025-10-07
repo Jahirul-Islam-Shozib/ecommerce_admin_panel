@@ -1,0 +1,10 @@
+<div class="layout-topbar">
+  <div class="layout-topbar-logo-container">
+    <div class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+      <i class="pi pi-bars" style="font-size: 1.25rem"></i>
+    </div>
+    <div class="layout-topbar-menu">
+      <p-tieredMenu #menu [autoDisplay]="false" [model]="items" aria-orientation="horizontal"></p-tieredMenu>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+#listTable {
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    font-size: 14px;
+    padding: 10px 5px;
+    word-break: break-word;
+
+    &:first-child {
+      padding-left: 14px;
+    }
+
+    &:last-child {
+      padding-right: 14px;
+    }
+  }
+
+  th {
+    min-width: 150px;
+    padding: 14px 5px;
+
+    &:last-child {
+      min-width: 60px;
+      width: 60px;
+      padding-right: 14px;
+    }
+
+    &:first-child {
+      padding-left: 14px;
+    }
+  }
+
+  .p-inputtext {
+    padding: .75rem .75rem .75rem 2rem !important;
+  }
+
+
+  .p-datatable .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 0 0 16px 0;
+  }
+
+  p-button.p-button-icon-only.p-button-rounded {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  @media (max-width: 450px) {
+    .flex-cont {
+      flex-direction: column-reverse;
+    }
+    .ad-btn {
+      margin-bottom: 1.25rem;
+    }
+  }
+}
+
+.input-label {
+  display: block;
+  margin-bottom:7px;
+  font-weight: 500;
+}
+
+.da-label {
+  display: block;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.form-container {
+  .form-header {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 5px;
+  }
+}
+
+.header-span {
+  color: #E04562;
+  margin-left: 2px;
+}
+
+@media only screen and (min-width: 980px) {
+  .form-container {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .form-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 979px) {
+  .form-container {
+    width: 100%;
+  }
+}
+.wrapper{
+  border: 1px solid #CBD5E1;
+  width: 45rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide year dropdown in month view */
+.hide-year-dropdown .p-datepicker-calendar-container {
+  display: none !important;
+}
+.p-auto-complete{
+  width: 100% !important;
+}
+.item-wrapper{
+  border: 1px solid #CBD5E1;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.item-container{
+  width: 100%;
+}
+#employeeTable {
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    font-size: 14px;
+    padding: 10px 5px;
+    word-break: break-word;
+
+    &:first-child {
+      padding-left: 14px;
+    }
+
+    &:last-child {
+      padding-right: 14px;
+    }
+  }
+
+  th {
+    min-width: 150px;
+    padding: 14px 5px;
+
+    &:last-child {
+      padding-right: 14px;
+    }
+
+    &:first-child {
+      padding-left: 14px;
+    }
+  }
+
+
+  .p-datatable .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 0 0 16px 0;
+  }
+
+  p-button.p-button-icon-only.p-button-rounded {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  @media (max-width: 450px) {
+    .flex-cont {
+      flex-direction: column-reverse;
+    }
+    .ad-btn {
+      margin-bottom: 1.25rem;
+    }
+  }
+}
+//.employee-wrapper{
+//  border: 1px solid #CBD5E1;
+//  width: 42rem;
+//  max-height: 50rem;
+//  padding: 1.5rem;
+//  border-radius: 16px;
+//  display: flex;
+//  flex-direction: column;
+//  overflow-y: auto;
+//}
