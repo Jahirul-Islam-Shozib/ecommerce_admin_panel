@@ -1,0 +1,38 @@
+.p-tag-warn {
+  background: #FFFBE3;
+  border: 1px solid #FFEFD0;
+  color: #FFAB0F;
+}
+
+.p-tag-success {
+  background: #E4FFE3;
+  border: 1px solid #C2F4C3;
+  color: #01D548;
+}
+
+.p-tag-danger {
+  background: #FFF6F3;
+  border: 1px solid #F6D8D8;
+  color: #FF524C;
+}
+
+.consumer-info {
+  border: 1px solid #ECFDF5;
+  background: #f2f7f5;
+  padding: 1rem;
+  border-radius: 12px;
+  height: 100%;
+
+  p {
+    margin-bottom: 8px;
+  }
+
+  h6 {
+    margin-bottom: 8px;
+  }
+
+  .consumer-name {
+    font-weight: bold;
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,204 @@
+<div>
+  <p-select-button
+    [options]="paymentOptions"
+    [(ngModel)]="value"
+    optionLabel="name"
+    optionValue="value"
+    (onChange)="onStatusChange()"
+  >
+  </p-select-button>
+</div>
+
+<div class="mt-12">
+  <p-table
+    [value]="filteredOrders"
+    selectionMode="single"
+    [(selection)]="selectedOrder"
+    (onRowSelect)="onRowSelect($event)"
+    dataKey="orderId">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Order ID</th>
+        <th>Consumer</th>
+        <th>Items</th>
+        <th>Order date</th>
+        <!--        <th>Delivery date</th>-->
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr [pSelectableRow]="order">
+        <td>{{ order.orderId }}</td>
+        <td>{{ order.employeeInfo.name }}</td>
+        <td>{{ order.orderSummary?.items?.length || 0 }}</td>
+        <td>{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
+        <!--        <td>{{ order.deliveryDate }}</td>-->
+        <td>
+          <p-tag
+            [value]="order.status"
+            [severity]="getStatusSeverity(order.status)"
+            [rounded]="true"
+          ></p-tag>
+        </td>
+        <td class="flex gap-2">
+          <ng-container *ngIf="order.status === 'Pending'">
+            <p-button label="Cancel" variant="text" icon="pi pi-times" severity="danger" size="small"
+                      (click)="cancelOrder(order)"/>
+            <p-button label="Confirm" severity="success" variant="outlined"
+                      [style]="{ background: '#ffffff', border: '1px solid #0EA5E9', color: '#0EA5E9' }" size="small"
+                      (click)="confirmOrder(order)"/>
+          </ng-container>
+
+          <ng-container *ngIf="order.status === 'Confirmed'">
+            <p-button label="Print" severity="secondary" icon="pi pi-print" [style]="{ background: '#ffffff' }" outlined
+                      size="small"></p-button>
+            <p-button label="Complete" severity="success" size="small" (click)="completeOrder(order)"></p-button>
+          </ng-container>
+
+          <ng-container *ngIf="order.status === 'Delivered'">
+            <p-button label="Print" severity="secondary" icon="pi pi-print" [style]="{ background: '#ffffff' }" outlined
+                      size="small"></p-button>
+          </ng-container>
+
+
+          <ng-container *ngIf="order.status === 'Cancel'">
+            <p-button label="View" severity="secondary" outlined size="small" icon="pi pi-eye"
+                      [style]="{ background: '#ffffff' }" (click)="confirmOrder(order)"></p-button>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<p-dialog
+  [(visible)]="visibleDialog"
+  [modal]="true"
+  [style]="{ width: '75%' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true">
+
+  <!-- Dialog Header -->
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center gap-3">
+      <h3 class="font-semibold m-0">Order #{{ selectedOrder?.orderId }}</h3>
+      <p-tag
+        [value]="selectedOrder?.status"
+        [severity]="getStatusSeverity(selectedOrder?.status)"
+        [rounded]="true">
+      </p-tag>
+    </div>
+  </ng-template>
+
+  <!-- Dialog Body -->
+  <div class="p-3 flex gap-6">
+
+    <!-- Left Column: Ordered Items Table -->
+    <div style="flex: 0 0 70%">
+      <h4 class="font-semibold mb-2">Ordered Items</h4>
+      <p-table [value]="selectedOrder?.orderSummary.items" [tableStyle]="{ 'min-width': '100%' }" scrollHeight="500px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Sl No</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price/unit</th>
+            <th>Total</th>
+            <th>Weight</th>
+            <th>In stock</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ rowIndex + 1 }}</td>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.pricePerUnit }}</td>
+            <td>{{ item.totalPrice }}</td>
+            <td>{{ item.weightValue ? item.weightValue + item.weightUnit : '-' }}</td>
+            <td>
+              <p-select-button [options]="stateOptions" [(ngModel)]="item.inStock" optionLabel="label"
+                               optionValue="value" aria-labelledby="basic"/>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Right Column: Employee Info -->
+    <div style="flex: 0 0 30%;" class="consumer-info">
+      <div class="mb-6">
+        <h6 class="font-semibold"><span class="pi pi-user" style="margin-right: 2px"></span> Consumer Info</h6>
+        <p class="consumer-name">{{ selectedOrder?.employeeInfo?.name }}</p>
+        <p>Company: {{ selectedOrder?.employeeInfo?.company }}</p>
+        <p>ID: {{ selectedOrder?.employeeInfo?.employeeId }}</p>
+        <p>Contact: {{ selectedOrder?.employeeInfo?.phone }}</p>
+        <p>Mail: {{ selectedOrder?.employeeInfo?.email }}</p>
+      </div>
+
+      <div class="mb-6">
+        <h6 class="font-semibold"><span class="pi pi-map-marker" style="margin-right: 2px"></span> Delivery Info</h6>
+        <p>Delivery Address: {{ selectedOrder?.deliveryOption?.pickupPoint }}</p>
+        <p>Delivery Date: {{ selectedOrder?.deliveryOption?.deliveryDay }}</p>
+      </div>
+
+
+      <div>
+        <h6 class="font-semibold">Cost Summary</h6>
+        <p-divider></p-divider>
+        <p class="flex justify-between">
+          <span>Items Price</span>
+          <strong>{{ getCalculatedTotals(selectedOrder).subtotal }}৳</strong>
+        </p>
+        <p class="flex justify-between">
+          <span>Vat/Tax</span>
+          <strong>+ {{ getCalculatedTotals(selectedOrder).tax }}৳</strong>
+        </p>
+
+        <p class="flex justify-between">
+          <span>Discount</span>
+          <strong>- 00৳</strong>
+        </p>
+        <p-divider></p-divider>
+        <p class="flex justify-between">
+          <span style="font-size: 18px; font-weight: bold">Subtotal</span>
+          <strong>{{ getCalculatedTotals(selectedOrder).total }}৳</strong>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Dialog Footer -->
+  <ng-template pTemplate="footer">
+    <ng-container *ngIf="selectedOrder.status === 'Pending'">
+      <p-button label="Cancel" variant="outlined" severity="danger" size="small" (click)="cancelOrder(selectedOrder)"/>
+      <p-button label="Confirm" severity="success" variant="outlined" size="small"
+                [style]="{ background: '#ffffff', border: '1px solid #0EA5E9', color: '#0EA5E9' }"
+                (click)="confirmOrder(selectedOrder)"/>
+    </ng-container>
+
+    <ng-container *ngIf="selectedOrder.status === 'Confirmed'">
+      <p-button label="Print" severity="secondary" icon="pi pi-print" outlined [style]="{ background: '#ffffff' }"
+                size="small"></p-button>
+      <p-button label="Complete" severity="success" size="small" (click)="completeOrder(selectedOrder)"></p-button>
+    </ng-container>
+
+    <ng-container *ngIf="selectedOrder.status === 'Delivered'">
+      <p-button label="Print" severity="secondary" icon="pi pi-print" outlined [style]="{ background: '#ffffff' }"
+                size="small"></p-button>
+    </ng-container>
+
+
+    <ng-container *ngIf="selectedOrder.status === 'Cancel'">
+      <p-button label="View" severity="secondary" size="small" icon="pi pi-eye" outlined
+                [style]="{ background: '#ffffff' }" (click)="confirmOrder(selectedOrder)"></p-button>
+    </ng-container>
+  </ng-template>
+</p-dialog>
+
+
+

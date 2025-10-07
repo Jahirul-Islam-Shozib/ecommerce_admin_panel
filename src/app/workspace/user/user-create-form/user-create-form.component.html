@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="p-6 bg-white rounded-2xl shadow-md">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Name -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Employee Name</label>
+          <input pInputText formControlName="name" placeholder="Enter employee name" class="w-full"/>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Company</label>
+          <p-select
+            formControlName="company"
+            [options]="companyOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select company"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Employee ID -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Employee ID</label>
+          <input pInputText formControlName="employeeId" placeholder="Enter ID" class="w-full"/>
+        </div>
+
+        <!-- Designation -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Designation</label>
+          <input
+            pInputText
+            formControlName="designation"
+            placeholder="Enter designation"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Department -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Department</label>
+          <input
+            pInputText
+            formControlName="department"
+            placeholder="Enter department"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Phone (BD Format)</label>
+          <input
+            pInputText
+            formControlName="phone"
+            placeholder="01XXXXXXXXX"
+            class="w-full"
+          />
+          <small class="text-red-500" *ngIf="userForm.get('phone')?.invalid && userForm.get('phone')?.touched">
+            Enter a valid Bangladeshi number.
+          </small>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Email</label>
+          <input pInputText formControlName="email" placeholder="Enter email" class="w-full"/>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block mb-1 text-md font-semibold text-gray-700">Password</label>
+          <input pInputText type="password" formControlName="password" placeholder="Min 6 characters" class="w-full"/>
+        </div>
+
+      </div>
+
+      <!-- Submit -->
+      <div class="flex justify-end">
+        <p-button label="Save Employee" icon="pi pi-check" type="submit" [disabled]="userForm.invalid"/>
+      </div>
+
+    </form>
+  </div>
+</div>
+
