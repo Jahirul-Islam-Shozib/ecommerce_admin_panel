@@ -4,6 +4,7 @@ import {InputText} from 'primeng/inputtext';
 import {InputNumber} from 'primeng/inputnumber';
 import {DropdownModule} from 'primeng/dropdown';
 import {Button} from 'primeng/button';
+import {Toast} from 'primeng/toast';
 import {NgIf} from '@angular/common';
 import {Product} from '../../models/product';
 import {ActivatedRoute} from '@angular/router';
@@ -11,7 +12,6 @@ import {InputGroup} from 'primeng/inputgroup';
 import {ProductStore} from '../../signal-store/product-store.service';
 import {Select} from 'primeng/select';
 import {ProductService} from '../../../../service/product/product.service';
-import {removeBackground} from '@imgly/background-removal';
 
 
 @Component({
@@ -24,7 +24,8 @@ import {removeBackground} from '@imgly/background-removal';
     Button,
     NgIf,
     InputGroup,
-    Select
+    Select,
+    Toast
   ],
   templateUrl: './product-form.component.html',
   standalone: true,
@@ -106,7 +107,10 @@ export class ProductFormComponent implements OnInit {
   private fillForm(product: Product) {
     if (!product) return;
     this.productForm.patchValue(product);
-    this.previewUrl = product.image || `data:image/png;base64,${product.image}`;
+    const img = product.image;
+    this.previewUrl = img?.startsWith('http') || img?.startsWith('data:')
+      ? img
+      : `data:image/png;base64,${img}`;
   }
 
   initProductForm() {

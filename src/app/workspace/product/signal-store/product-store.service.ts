@@ -2,6 +2,7 @@ import {computed, Injectable, signal} from '@angular/core';
 import {Product} from '../models/product';
 import {ProductService} from '../../../service/product/product.service';
 import {Router} from '@angular/router';
+import {MessageService} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,12 @@ export class ProductStore {
   // selectedProduct: WritableSignal<Product | null> = signal<Product | null>(null);
 
   constructor(private productService: ProductService,
-              private router: Router) {
+              private router: Router,
+              private messageService: MessageService) {
   }
 
   loadAllProducts(params: { page?: number; size?: number } = {}): void {
-    const { page = 0, size = 10 } = params;
+    const {page = 0, size = 10} = params;
 
     this.productService.getAllProducts(page, size).subscribe({
       next: (res) => {
@@ -69,8 +71,13 @@ export class ProductStore {
         this._products.update(products =>
           products.map(p => p._id === updatedProduct._id ? updatedProduct : p)
         );
-        this.router.navigate(['/product/list']);
-        // this.selectedProduct.set(null);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Product updated successfully',
+          life: 3000
+        });
+        setTimeout(() => this.router.navigate(['/product/list']), 1000);
       },
       error: (err) => console.error('Update failed', err)
     });

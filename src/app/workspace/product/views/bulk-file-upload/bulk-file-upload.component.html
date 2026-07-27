@@ -12,14 +12,37 @@
                      (change)="uploadFile($event)">
             </div>
           </div>
+
+          <div *ngIf="busyState" class="mt-3 mb-2">
+            <div class="flex align-items-center gap-2 mb-2">
+              <i class="pi pi-cloud-upload" style="font-size: 1.2rem; color: #0EA5E9;"></i>
+              <span style="font-size: 0.9rem; color: #555;">Uploading, please wait...</span>
+            </div>
+            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+          </div>
+
           <p-divider></p-divider>
           <div class="field col-12" style="text-align:end">
             <p-button id="reset-btn" type="submit" label="Upload" (click)="uploadProfile()"
                       [disabled]="busyState || !attachmentFile" class="p-button-primary p-button-sm mt-2"></p-button>
           </div>
         </form>
+
+        <div *ngIf="lastUploadedFile" class="mt-3 p-3"
+             style="border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;">
+          <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px;">Last uploaded</p>
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-file-excel" style="font-size: 1.3rem; color: #22c55e;"></i>
+            <div>
+              <p style="font-weight: 600; margin: 0; font-size: 0.9rem;">{{ lastUploadedFile.name }}</p>
+              <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">{{ lastUploadedFile.size }}
+                &middot; {{ lastUploadedFile.uploadedAt | date:'dd MMM yyyy, hh:mm a' }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<p-toast></p-toast>

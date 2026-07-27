@@ -9,13 +9,22 @@
   </p-select-button>
 </div>
 
-<div class="mt-12">
+<div class="card mt-6">
   <p-table
     [value]="filteredOrders"
     selectionMode="single"
     [(selection)]="selectedOrder"
     (onRowSelect)="onRowSelect($event)"
-    dataKey="orderId">
+    dataKey="orderId"
+    [paginator]="true"
+    [rows]="size"
+    [first]="first"
+    [totalRecords]="total"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [lazy]="true"
+    (onLazyLoad)="onDataChange($event)">
     <ng-template pTemplate="header">
       <tr>
         <th>Order ID</th>
@@ -43,9 +52,9 @@
         </td>
         <td class="flex gap-2">
           <ng-container *ngIf="order.status === 'Pending'">
-            <p-button label="Cancel" variant="text" icon="pi pi-times" severity="danger" size="small"
+            <p-button label="Cancel" icon="pi pi-times" outlined severity="danger" size="small"
                       (click)="cancelOrder(order)"/>
-            <p-button label="Confirm" severity="success" variant="outlined"
+            <p-button label="Confirm" icon="pi pi-forward" severity="success" variant="outlined"
                       [style]="{ background: '#ffffff', border: '1px solid #0EA5E9', color: '#0EA5E9' }" size="small"
                       (click)="confirmOrder(order)"/>
           </ng-container>
@@ -53,7 +62,8 @@
           <ng-container *ngIf="order.status === 'Confirmed'">
             <p-button label="Print" severity="secondary" icon="pi pi-print" [style]="{ background: '#ffffff' }" outlined
                       size="small"></p-button>
-            <p-button label="Complete" severity="success" size="small" (click)="completeOrder(order)"></p-button>
+            <p-button label="Complete" severity="success" icon="pi pi-check" size="small"
+                      (click)="completeOrder(order)"></p-button>
           </ng-container>
 
           <ng-container *ngIf="order.status === 'Delivered'">
@@ -63,7 +73,7 @@
 
 
           <ng-container *ngIf="order.status === 'Cancel'">
-            <p-button label="View" severity="secondary" outlined size="small" icon="pi pi-eye"
+            <p-button label="Re-confirm" severity="secondary" outlined size="small" icon="pi pi-arrow-right-arrow-left"
                       [style]="{ background: '#ffffff' }" (click)="confirmOrder(order)"></p-button>
           </ng-container>
         </td>
@@ -175,8 +185,9 @@
   <!-- Dialog Footer -->
   <ng-template pTemplate="footer">
     <ng-container *ngIf="selectedOrder.status === 'Pending'">
-      <p-button label="Cancel" variant="outlined" severity="danger" size="small" (click)="cancelOrder(selectedOrder)"/>
-      <p-button label="Confirm" severity="success" variant="outlined" size="small"
+      <p-button label="Cancel" variant="outlined" icon="pi pi-times" severity="danger" size="small"
+                (click)="cancelOrder(selectedOrder)"/>
+      <p-button label="Confirm" icon="pi pi-forward" severity="success" variant="outlined" size="small"
                 [style]="{ background: '#ffffff', border: '1px solid #0EA5E9', color: '#0EA5E9' }"
                 (click)="confirmOrder(selectedOrder)"/>
     </ng-container>
@@ -184,7 +195,7 @@
     <ng-container *ngIf="selectedOrder.status === 'Confirmed'">
       <p-button label="Print" severity="secondary" icon="pi pi-print" outlined [style]="{ background: '#ffffff' }"
                 size="small"></p-button>
-      <p-button label="Complete" severity="success" size="small" (click)="completeOrder(selectedOrder)"></p-button>
+      <p-button label="Complete" icon="pi pi-check" severity="success" size="small" (click)="completeOrder(selectedOrder)"></p-button>
     </ng-container>
 
     <ng-container *ngIf="selectedOrder.status === 'Delivered'">
@@ -193,9 +204,9 @@
     </ng-container>
 
 
-    <ng-container *ngIf="selectedOrder.status === 'Cancel'">
-      <p-button label="View" severity="secondary" size="small" icon="pi pi-eye" outlined
-                [style]="{ background: '#ffffff' }" (click)="confirmOrder(selectedOrder)"></p-button>
+    <ng-container>
+      <p-button label="Close" severity="secondary" size="small" icon="pi pi-times" outlined
+                [style]="{ background: '#ffffff' }" (click)="visibleDialog = false"></p-button>
     </ng-container>
   </ng-template>
 </p-dialog>

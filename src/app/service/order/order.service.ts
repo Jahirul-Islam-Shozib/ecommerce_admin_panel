@@ -6,7 +6,7 @@ import {environment} from '../../../environments/environment';
 
 export interface OrderListResponse {
   data: OrderPayload[];
-  meta?: {  total: number;  };
+  meta: { total: number };
 }
 
 @Injectable({
@@ -26,12 +26,12 @@ export class OrderService {
       employeeId?: string;
       orderId?: string;
     },
-  ): Observable<{ data: OrderPayload[]; total: number }> {
+  ): Observable<OrderListResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.post<{ data: OrderPayload[]; total: number }>(
+    return this.http.post<OrderListResponse>(
       `${this.baseUrl}/list`,
       body ?? {status: 'All'},
       {params},
@@ -62,6 +62,6 @@ export class OrderService {
       orderId: payload.orderId,
     };
 
-    return this.http.post<OrderListResponse>(`${this.baseUrl}/${id}/status`, body, { params });
+    return this.http.post<OrderListResponse>(`${this.baseUrl}/${id}/status`, body, {params});
   }
 }

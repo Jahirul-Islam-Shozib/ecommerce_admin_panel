@@ -32,6 +32,7 @@ export type OrderStatus =
     DatePipe
   ],
   templateUrl: './order-list.component.html',
+  standalone: true,
   styleUrl: './order-list.component.scss'
 })
 
@@ -43,6 +44,7 @@ export class OrderListComponent implements OnInit {
   orders: OrderPayload[] = [];
   loading = false;
 
+  first = 0;
   page = 1;
   size = 10;
   total = 0;
@@ -65,11 +67,18 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchOrders();
   }
 
   onStatusChange(): void {
     this.page = 1;
+    this.first = 0;
+    this.fetchOrders();
+  }
+
+  onDataChange(event: any): void {
+    this.page = event.first / event.rows + 1;
+    this.size = event.rows;
+    this.first = event.first;
     this.fetchOrders();
   }
 
@@ -79,7 +88,7 @@ export class OrderListComponent implements OnInit {
     this.orderService.getOrderList(this.page, this.size, {status: this.value}).subscribe({
       next: (res) => {
         this.orders = res?.data ?? [];
-        this.total = res?.total ?? 0;
+        this.total = res?.meta?.total ?? 0;
         this.loading = false;
       },
       error: () => {
@@ -118,8 +127,7 @@ export class OrderListComponent implements OnInit {
   }
 
   confirmOrder(order: any) {
-    if (order.status === 'Pending' || order.status === 'Cancel') {
-      // order.status = 'Confirmed';
+    if (order.status === 'Pending') {
       this.updateStatus(order, 'Confirmed');
     }
   }
@@ -144,14 +152,15 @@ export class OrderListComponent implements OnInit {
 
     this.loading = true;
     this.orderService.updateOrderStatus(id, {
-      status: nextStatus,       // ✅ now OK
-      listStatus: this.value,   // ✅ 'All' | OrderStatus
+      status: nextStatus,
+      listStatus: this.value,
       page: this.page,
       size: this.size,
     }).subscribe({
       next: (res) => {
         this.loading = false;
         this.orders = res?.data ?? [];
+        this.total = res?.meta?.total ?? this.total;
       },
       error: () => {
         this.loading = false;
